@@ -12,8 +12,8 @@ exe_best=0
 
 out_path=output/figure6
 
-repeat=3
-tc_repeat=3 # use this to adjust tc repeat times
+repeat=1
+tc_repeat=1 # use this to adjust tc repeat times
 #----------only set these parameters----------
 kernel_name=$1
 graph_name=$2

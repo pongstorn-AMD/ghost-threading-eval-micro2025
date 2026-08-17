@@ -9,7 +9,8 @@
 GRAPH_DIR = benchmark/graphs
 RAW_GRAPH_DIR = benchmark/graphs/raw
 
-GRAPHS = twitter twitter-train web web-train road road-train kron kron-train urand urand-train
+GRAPHS = twitter twitter-train web web-train road road-train kron kron-train urand urand-train \
+	youtube web_google web_berkstan roadnetca wiki_talk as_skitter pokec livejournal orkut
 ALL_GRAPHS =\
 	$(addsuffix .sg, $(GRAPHS)) \
 	$(addsuffix .wsg, $(GRAPHS)) \
@@ -176,6 +177,164 @@ $(GRAPH_DIR)/urand-train.wsg: converter
 $(GRAPH_DIR)/urand-trainU.sg: $(GRAPH_DIR)/urand-train.sg converter
 	rm -f $@
 	ln -s urand-train.sg $@
+
+
+# SNAP graphs (download + convert to GAP serialized format)
+# Source: https://snap.stanford.edu/data/
+# Comment lines (# ...) are stripped when producing .el for the converter.
+
+# youtube (com-Youtube undirected)
+YOUTUBE_URL = https://snap.stanford.edu/data/bigdata/communities/com-youtube.ungraph.txt.gz
+$(RAW_GRAPH_DIR)/com-youtube.ungraph.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(YOUTUBE_URL)
+
+$(RAW_GRAPH_DIR)/youtube.el: $(RAW_GRAPH_DIR)/com-youtube.ungraph.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/youtube.sg: $(RAW_GRAPH_DIR)/youtube.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/youtube.wsg: $(RAW_GRAPH_DIR)/youtube.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/youtubeU.sg: $(RAW_GRAPH_DIR)/youtube.el converter
+	./converter -sf $< -b $@
+
+# web_google
+WEB_GOOGLE_URL = https://snap.stanford.edu/data/web-Google.txt.gz
+$(RAW_GRAPH_DIR)/web-Google.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(WEB_GOOGLE_URL)
+
+$(RAW_GRAPH_DIR)/web_google.el: $(RAW_GRAPH_DIR)/web-Google.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/web_google.sg: $(RAW_GRAPH_DIR)/web_google.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/web_google.wsg: $(RAW_GRAPH_DIR)/web_google.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/web_googleU.sg: $(RAW_GRAPH_DIR)/web_google.el converter
+	./converter -sf $< -b $@
+
+# web_berkstan
+WEB_BERKSTAN_URL = https://snap.stanford.edu/data/web-BerkStan.txt.gz
+$(RAW_GRAPH_DIR)/web-BerkStan.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(WEB_BERKSTAN_URL)
+
+$(RAW_GRAPH_DIR)/web_berkstan.el: $(RAW_GRAPH_DIR)/web-BerkStan.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/web_berkstan.sg: $(RAW_GRAPH_DIR)/web_berkstan.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/web_berkstan.wsg: $(RAW_GRAPH_DIR)/web_berkstan.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/web_berkstanU.sg: $(RAW_GRAPH_DIR)/web_berkstan.el converter
+	./converter -sf $< -b $@
+
+# roadnetca (California road network)
+ROADNETCA_URL = https://snap.stanford.edu/data/roadNet-CA.txt.gz
+$(RAW_GRAPH_DIR)/roadNet-CA.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(ROADNETCA_URL)
+
+$(RAW_GRAPH_DIR)/roadnetca.el: $(RAW_GRAPH_DIR)/roadNet-CA.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/roadnetca.sg: $(RAW_GRAPH_DIR)/roadnetca.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/roadnetca.wsg: $(RAW_GRAPH_DIR)/roadnetca.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/roadnetcaU.sg: $(RAW_GRAPH_DIR)/roadnetca.el converter
+	./converter -sf $< -b $@
+
+# wiki_talk
+WIKI_TALK_URL = https://snap.stanford.edu/data/wiki-Talk.txt.gz
+$(RAW_GRAPH_DIR)/wiki-Talk.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(WIKI_TALK_URL)
+
+$(RAW_GRAPH_DIR)/wiki_talk.el: $(RAW_GRAPH_DIR)/wiki-Talk.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/wiki_talk.sg: $(RAW_GRAPH_DIR)/wiki_talk.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/wiki_talk.wsg: $(RAW_GRAPH_DIR)/wiki_talk.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/wiki_talkU.sg: $(RAW_GRAPH_DIR)/wiki_talk.el converter
+	./converter -sf $< -b $@
+
+# as_skitter
+AS_SKITTER_URL = https://snap.stanford.edu/data/as-skitter.txt.gz
+$(RAW_GRAPH_DIR)/as-skitter.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(AS_SKITTER_URL)
+
+$(RAW_GRAPH_DIR)/as_skitter.el: $(RAW_GRAPH_DIR)/as-skitter.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/as_skitter.sg: $(RAW_GRAPH_DIR)/as_skitter.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/as_skitter.wsg: $(RAW_GRAPH_DIR)/as_skitter.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/as_skitterU.sg: $(RAW_GRAPH_DIR)/as_skitter.el converter
+	./converter -sf $< -b $@
+
+# pokec
+POKEC_URL = https://snap.stanford.edu/data/soc-pokec-relationships.txt.gz
+$(RAW_GRAPH_DIR)/soc-pokec-relationships.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(POKEC_URL)
+
+$(RAW_GRAPH_DIR)/pokec.el: $(RAW_GRAPH_DIR)/soc-pokec-relationships.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/pokec.sg: $(RAW_GRAPH_DIR)/pokec.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/pokec.wsg: $(RAW_GRAPH_DIR)/pokec.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/pokecU.sg: $(RAW_GRAPH_DIR)/pokec.el converter
+	./converter -sf $< -b $@
+
+# livejournal
+LIVEJOURNAL_URL = https://snap.stanford.edu/data/soc-LiveJournal1.txt.gz
+$(RAW_GRAPH_DIR)/soc-LiveJournal1.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(LIVEJOURNAL_URL)
+
+$(RAW_GRAPH_DIR)/livejournal.el: $(RAW_GRAPH_DIR)/soc-LiveJournal1.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/livejournal.sg: $(RAW_GRAPH_DIR)/livejournal.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/livejournal.wsg: $(RAW_GRAPH_DIR)/livejournal.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/livejournalU.sg: $(RAW_GRAPH_DIR)/livejournal.el converter
+	./converter -sf $< -b $@
+
+# orkut
+ORKUT_URL = https://snap.stanford.edu/data/bigdata/communities/com-orkut.ungraph.txt.gz
+$(RAW_GRAPH_DIR)/com-orkut.ungraph.txt.gz:
+	wget -P $(RAW_GRAPH_DIR) $(ORKUT_URL)
+
+$(RAW_GRAPH_DIR)/orkut.el: $(RAW_GRAPH_DIR)/com-orkut.ungraph.txt.gz
+	gunzip -c $< | grep -v '^#' > $@
+
+$(GRAPH_DIR)/orkut.sg: $(RAW_GRAPH_DIR)/orkut.el converter
+	./converter -f $< -b $@
+
+$(GRAPH_DIR)/orkut.wsg: $(RAW_GRAPH_DIR)/orkut.el converter
+	./converter -f $< -wb $@
+
+$(GRAPH_DIR)/orkutU.sg: $(RAW_GRAPH_DIR)/orkut.el converter
+	./converter -sf $< -b $@
 
 
 # Benchmark Execution --------------------------------------------------#
