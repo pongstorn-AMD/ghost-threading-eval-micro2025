@@ -14,6 +14,9 @@ out_path=output/figure6
 
 repeat=1
 tc_repeat=1 # use this to adjust tc repeat times
+
+#repeat=3
+#tc_repeat=3 # use this to adjust tc repeat times
 #----------only set these parameters----------
 kernel_name=$1
 graph_name=$2
@@ -206,7 +209,8 @@ if [ "$exe_baslines" == "1" ]; then
 	g++ -std=c++11 -pthread -O3 -Wall -w src/$kernel_name.cc -o $kernel_name
 	out_pf="$out_path/$kernel_name-$graph_name-baseline.txt"
 	echo "Baseline: $out_pf."
-	taskset -c $smt_core0 ./$kernel_name -f $graph -n $repeat > $out_pf 2>&1
+#	taskset -c $smt_core0 ./$kernel_name -f $graph -n $repeat > $out_pf 2>&1
+	perf stat -a -euncore_imc_*/cas_count_read/,uncore_imc_*/cas_count_write/ taskset -c $smt_core0 ./$kernel_name -f $graph -n $repeat > $out_pf 2>&1
 	rm $kernel_name
 fi 
 
@@ -214,7 +218,8 @@ if [ "$exe_homp" == "1" ]; then
 	g++ -std=c++11 -pthread -fopenmp -O3 -Wall -w -DOMP -DNT=2 src/$kernel_name.cc -o $kernel_name-omp
 	out_pf="$out_path/$kernel_name-$graph_name-homp.txt"
 	echo "HOMP: $out_pf."
-	taskset -c $smt_core0,$smt_core1 ./$kernel_name-omp -f $graph -n $repeat > $out_pf 2>&1
+#	taskset -c $smt_core0,$smt_core1 ./$kernel_name-omp -f $graph -n $repeat > $out_pf 2>&1
+    perf stat -a -euncore_imc_*/cas_count_read/,uncore_imc_*/cas_count_write/ taskset -c $smt_core0,$smt_core1 ./$kernel_name-omp -f $graph -n $repeat > $out_pf 2>&1
 	rm $kernel_name-omp
 fi 
 
@@ -222,7 +227,8 @@ if [ "$exe_swpf" == "1" ]; then
 	g++ -std=c++11 -pthread -O3 -Wall -w -DSWPF src/$kernel_name.cc -o $kernel_name-swpf
 	out_pf="$out_path/$kernel_name-$graph_name-swpf.txt"
 	echo "SWPF: $out_pf."
-	taskset -c $smt_core0 ./$kernel_name-swpf -f $graph -n $repeat > $out_pf 2>&1
+#	taskset -c $smt_core0 ./$kernel_name-swpf -f $graph -n $repeat > $out_pf 2>&1
+	perf stat -a -euncore_imc_*/cas_count_read/,uncore_imc_*/cas_count_write/ taskset -c $smt_core0 ./$kernel_name-swpf -f $graph -n $repeat > $out_pf 2>&1
 	rm $kernel_name-swpf
 fi 
 
@@ -241,7 +247,8 @@ do
 				if [ $un_threshold -le $threshold ]; then
 					out_pf="$out_path/$kernel_name_htpf.txt"
 					echo "HTPF: $out_pf."
-					taskset -c $smt_core0,$smt_core1 ./$kernel_tpf_name -f $graph -n $repeat -p $syncfreq -o $threshold -j $skip -q $un_threshold > $out_pf 2>&1
+#					taskset -c $smt_core0,$smt_core1 ./$kernel_tpf_name -f $graph -n $repeat -p $syncfreq -o $threshold -j $skip -q $un_threshold > $out_pf 2>&1
+					perf stat -a -euncore_imc_*/cas_count_read/,uncore_imc_*/cas_count_write/ taskset -c $smt_core0,$smt_core1 ./$kernel_tpf_name -f $graph -n $repeat -p $syncfreq -o $threshold -j $skip -q $un_threshold > $out_pf 2>&1
 				fi 
 				fi
 			done 
@@ -264,7 +271,8 @@ do
 				if [ $un_threshold -le $threshold ]; then
 					out_pf="$out_path/$kernel_name_htpf.txt"
 					echo "TPF: $out_pf."
-					taskset -c $smt_core0,$smt_core1 ./$kernel_tpf_name -f $graph -n $repeat -p $syncfreq -o $threshold -j $skip -q $un_threshold > $out_pf 2>&1
+#					taskset -c $smt_core0,$smt_core1 ./$kernel_tpf_name -f $graph -n $repeat -p $syncfreq -o $threshold -j $skip -q $un_threshold > $out_pf 2>&1
+					perf stat -a -euncore_imc_*/cas_count_read/,uncore_imc_*/cas_count_write/ taskset -c $smt_core0,$smt_core1 ./$kernel_tpf_name -f $graph -n $repeat -p $syncfreq -o $threshold -j $skip -q $un_threshold > $out_pf 2>&1
 				fi 
 			done 
 		done
