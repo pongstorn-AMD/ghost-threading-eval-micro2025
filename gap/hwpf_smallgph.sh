@@ -98,5 +98,5 @@ echo "tgz $out_root -> ${out_root}.tgz"
 tar -czf "${out_root}.tgz" "$out_root"
 echo "Wrote ${out_root}.tgz"
 
-chown ubuntu output_small_graphs.tgz
-chgrp ubuntu output_small_graphs.tgz
+chown ubuntu ${out_root}.tgz
+chgrp ubuntu ${out_root}.tgz
