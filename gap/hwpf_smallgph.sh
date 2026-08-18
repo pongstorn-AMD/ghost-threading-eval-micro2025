@@ -42,11 +42,16 @@ sudo wrmsr -p 0 0x1a4 0x$new
 echo "msr 0x1a4 en hwpf"
 sudo rdmsr -p 0 0x1a4
 
-for f in "${files[@]}"; do
-    for k in "${kernels[@]}"; do
+for k in "${kernels[@]}"; do
+    echo "compile $k"
+    g++ -std=c++11 -pthread -O3 -Wall -w src/$k.cc -o $k
+    for f in "${files[@]}"; do
         echo "run $f $k"
+        ./test_baseline.sh "$k" "$f" "$smt_core0" w_hwpf_1rd "read";
+        ./test_baseline.sh "$k" "$f" "$smt_core0" w_hwpf_2rd "read";
         ./test_baseline.sh "$k" "$f" "$smt_core0" w_hwpf;
     done
+    rm -f $k
 done
 
 
@@ -57,11 +62,16 @@ sudo wrmsr -p 0 0x1a4 0x$new
 echo "msr 0x1a4 dis hwpf"
 sudo rdmsr -p 0 0x1a4
 
-for f in "${files[@]}"; do
-    for k in "${kernels[@]}"; do
+for k in "${kernels[@]}"; do
+    echo "compile $k"
+    g++ -std=c++11 -pthread -O3 -Wall -w src/$k.cc -o $k
+    for f in "${files[@]}"; do
         echo "run $f $k"
+        ./test_baseline.sh "$k" "$f" "$smt_core0" wo_hwpf_1rd "read";
+        ./test_baseline.sh "$k" "$f" "$smt_core0" wo_hwpf_2rd "read";
         ./test_baseline.sh "$k" "$f" "$smt_core0" wo_hwpf;
     done
+    rm -f $k
 done
 
 sudo wrmsr -p 0 0x1a4 0x$orig

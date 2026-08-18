@@ -140,6 +140,7 @@ class CLApp : public CLBase {
   int64_t start_vertex_ = -1;
   bool do_verify_ = false;
   bool enable_logging_ = false;
+  bool exit_after_read_ = false;
   int pf_dist_ = 3; 
   int core_offset_ = 9; 
   int skip_offset_ = 17; 
@@ -147,12 +148,13 @@ class CLApp : public CLBase {
 
  public:
   CLApp(int argc, char** argv, std::string name) : CLBase(argc, argv, name) {
-    get_args_ += "an:r:vlp:o:j:q:";
+    get_args_ += "an:r:vlxp:o:j:q:";
     AddHelpLine('a', "", "output analysis of last run", "false");
     AddHelpLine('n', "n", "perform n trials", std::to_string(num_trials_));
     AddHelpLine('r', "node", "start from node r", "rand");
     AddHelpLine('v', "", "verify the output of each run", "false");
     AddHelpLine('l', "", "log performance within each trial", "false");
+    AddHelpLine('x', "", "exit after graph read-in (skip kernel)", "false");
     AddHelpLine('p', "p", "prefetch distance", std::to_string(pf_dist_));
     AddHelpLine('o', "o", "prefetch core offset", std::to_string(core_offset_));
     AddHelpLine('j', "j", "skip iteration offset", std::to_string(skip_offset_));
@@ -166,6 +168,7 @@ class CLApp : public CLBase {
       case 'r': start_vertex_ = atol(opt_arg);          break;
       case 'v': do_verify_ = true;                      break;
       case 'l': enable_logging_ = true;                 break;
+      case 'x': exit_after_read_ = true;                break;
       case 'p': pf_dist_ = atoi(opt_arg);               break; 
       case 'o': core_offset_ = atoi(opt_arg);           break; 
       case 'j': skip_offset_ = atoi(opt_arg);           break; 
@@ -179,6 +182,7 @@ class CLApp : public CLBase {
   int64_t start_vertex() const { return start_vertex_; }
   bool do_verify() const { return do_verify_; }
   bool logging_en() const { return enable_logging_; }
+  bool exit_after_read() const { return exit_after_read_; }
   int sync_frequency() const { return pf_dist_; }
   int serialize_threshold() const { return core_offset_; } 
   int skip_offset() const { return skip_offset_; }

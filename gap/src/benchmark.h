@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cinttypes>
+#include <cstdlib>
 #include <functional>
 #include <random>
 #include <utility>
@@ -100,6 +101,11 @@ template<typename GraphT_, typename GraphFunc, typename AnalysisFunc,
 void BenchmarkKernel(const CLApp &cli, const GraphT_ &g,
                      GraphFunc kernel, AnalysisFunc stats,
                      VerifierFunc verify) {
+  // -x: measure read-in (+ graph build) only; skip trials/kernel.
+  if (cli.exit_after_read()) {
+    std::cout << "Exiting after graph read-in (-x)" << std::endl;
+    std::exit(0);
+  }
   g.PrintStats();
   double total_seconds = 0;
   Timer trial_timer;

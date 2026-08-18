@@ -1,8 +1,7 @@
 #!/usr/bin/bash
 
-# Baseline-only runner (copied from test.sh).
-# Usage: ./test_baseline.sh <kernel> <graph> <smt_core0> [smt_core1]
-# smt_core1 is accepted for drop-in compatibility with test.sh but unused.
+# Baseline-only runner (expects ./$kernel already built by the caller).
+# Usage: ./test_baseline.sh <kernel> <graph> <smt_core0> <out_dir> [read]
 
 #----------only set these parameters----------
 
@@ -14,9 +13,11 @@ graph_name=$2
 smt_core0=$3
 dir_name=$4
 out_path=output/"$dir_name"
+read_only="NONE"
+read_only=$5
 
 if [ -z "$kernel_name" ] || [ -z "$graph_name" ] || [ -z "$smt_core0" ]; then
-    echo "Usage: $0 <kernel> <graph> <smt_core0> [smt_core1]"
+    echo "Usage: $0 <kernel> <graph> <smt_core0> <out_dir> [read]"
     exit 1
 fi
 
@@ -36,13 +37,19 @@ if [ ! -f "$graph" ]; then
     exit 1
 fi
 
+if [ ! -x "./$kernel_name" ]; then
+    echo "Missing binary: ./$kernel_name (compile it before calling this script)"
+    exit 1
+fi
+
 mkdir -p $out_path
 
-g++ -std=c++11 -pthread -O3 -Wall -w src/$kernel_name.cc -o $kernel_name
 out_pf="$out_path/$kernel_name-$graph_name-baseline.txt"
 echo "Baseline: $out_pf."
-#taskset -c $smt_core0 ./$kernel_name -f $graph -n $repeat > $out_pf 2>&1
+if [ "$read_only" == "read" ]; then
+perf stat -a -euncore_imc_*/cas_count_read/,uncore_imc_*/cas_count_write/ taskset -c $smt_core0 ./$kernel_name -f $graph -n $repeat -x > $out_pf 2>&1
+else
 perf stat -a -euncore_imc_*/cas_count_read/,uncore_imc_*/cas_count_write/ taskset -c $smt_core0 ./$kernel_name -f $graph -n $repeat > $out_pf 2>&1
-rm $kernel_name
+fi
 
 exit
