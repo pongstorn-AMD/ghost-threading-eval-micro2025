@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+###################################
+# need to run with sudo
+###################################
+
 # assume sudo modprobe msr
 #BitMeaning when = 10L2 Hardware Prefetcher disabled1L2 Adjacent Cache Line Prefetcher disabled2DCU (L1 Data Cache) Prefetcher disabled3DCU IP Prefetcher disabled
 # c7i.metal-24xl
@@ -93,3 +97,6 @@ sudo rdmsr -p 0 0x1a4
 echo "tgz $out_root -> ${out_root}.tgz"
 tar -czf "${out_root}.tgz" "$out_root"
 echo "Wrote ${out_root}.tgz"
+
+chown ubuntu output_small_graphs.tgz
+chgrp ubuntu output_small_graphs.tgz
