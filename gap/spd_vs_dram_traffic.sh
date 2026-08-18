@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 smt_core0=$1
 smt_core1=$2
 num_attempts=5
@@ -42,9 +44,9 @@ for k in "${kernels[@]}"; do
         fi
         for a in $(seq 1 "$num_attempts"); do
             echo "run $g $k attempt $a"
-            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_1rd_${a}" "read" "baseline";
-            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_2rd_${a}" "read" "baseline";
-            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_${a}" "" "baseline";
+            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_1rd_${a}" "read";
+            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_2rd_${a}" "read";
+            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_${a}";
         done
     done
     rm -f $k
@@ -68,9 +70,9 @@ for k in "${kernels[@]}"; do
         fi
         for a in $(seq 1 "$num_attempts"); do
             echo "run $g $k attempt $a"
-            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_1rd_${a}" "read" "baseline";
-            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_2rd_${a}" "read" "baseline";
-            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_${a}" "" "baseline";
+            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_1rd_${a}" "read";
+            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_2rd_${a}" "read";
+            ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_${a}";
         done
     done
     rm -f $k
