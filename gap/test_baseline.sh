@@ -12,7 +12,7 @@ kernel_name=$1
 graph_name=$2
 smt_core0=$3
 dir_name=$4
-out_path=output/"$dir_name"
+out_path="$dir_name"
 read_only="NONE"
 read_only=$5
 
