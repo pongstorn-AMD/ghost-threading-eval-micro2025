@@ -1,6 +1,43 @@
 #!/usr/bin/bash
 
-# run on c7i.metal-24xl which support serialize instruction, check with "lscpu | grep serialize"
+# run sudo ./spd_vs_dram_traffic.sh 0 48
+# on c7i.metal-24xl which support serialize instruction, check with "lscpu | grep serialize"
+#ubuntu@ip-172-31-8-79:~/ghost-threading-eval-micro2025/gap/output_gt_spd_traffic$ lscpu
+#Architecture:                x86_64
+#  CPU op-mode(s):            32-bit, 64-bit
+#  Address sizes:             46 bits physical, 57 bits virtual
+#  Byte Order:                Little Endian
+#CPU(s):                      96
+#  On-line CPU(s) list:       0-95
+#Vendor ID:                   GenuineIntel
+#  Model name:                Intel(R) Xeon(R) Platinum 8488C
+#    CPU family:              6
+#    Model:                   143
+#    Thread(s) per core:      2
+#    Core(s) per socket:      48
+#    Socket(s):               1
+#    Stepping:                8
+#    CPU(s) scaling MHz:      26%
+#    CPU max MHz:             3800.0000
+#    CPU min MHz:             800.0000
+#    BogoMIPS:                4800.00
+#    Flags:                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts r
+#                             ep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popc
+#                             nt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 cat_l2 cdp_l3 intel_ppin cdp_l2 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriori
+#                             ty ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsav
+#                             eopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect user_shstk avx_vnni avx512_bf16 wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_epp hw
+#                             p_pkg_req hfi vnmi avx512vbmi umip pku ospke waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg tme avx512_vpopcntdq la57 rdpid bus_lock_detect cldemote movdiri movdir64b e
+#                             nqcmd fsrm md_clear serialize tsxldtrk pconfig arch_lbr ibt amx_bf16 avx512_fp16 amx_tile amx_int8 flush_l1d arch_capabilities
+#Virtualization features:     
+#  Virtualization:            VT-x
+#Caches (sum of all):         
+#  L1d:                       2.3 MiB (48 instances)
+#  L1i:                       1.5 MiB (48 instances)
+#  L2:                        96 MiB (48 instances)
+#  L3:                        105 MiB (1 instance)
+#NUMA:                        
+#  NUMA node(s):              1
+#  NUMA node0 CPU(s):         0-95
 
 smt_core0=$1
 smt_core1=$2
