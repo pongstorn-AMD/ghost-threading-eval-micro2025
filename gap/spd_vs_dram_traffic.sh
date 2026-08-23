@@ -2,7 +2,7 @@
 
 smt_core0=$1
 smt_core1=$2
-num_attempts=5
+num_attempts=4
 out_root=output_gt_spd_traffic
 
 files=(
@@ -34,22 +34,20 @@ sudo wrmsr -p 0 0x1a4 0x$new
 echo "msr 0x1a4 en hwpf"
 sudo rdmsr -p 0 0x1a4
 
-for k in "${kernels[@]}"; do
-    echo "compile $k"
-    g++ -std=c++11 -pthread -O3 -Wall -w src/$k.cc -o $k
-    for f in "${files[@]}"; do
-        g="$f"
-        if [ "$k" == "tc" ] && { [ "$f" == "twitter" ] || [ "$f" == "road" ] || [ "$f" == "web" ]; }; then
-            g="${f}U"
-        fi
-        for a in $(seq 1 "$num_attempts"); do
+for a in $(seq 1 "$num_attempts"); do
+    for k in "${kernels[@]}"; do
+        echo "compile $k"
+        for f in "${files[@]}"; do
+            g="$f"
+            if [ "$k" == "tc" ] && { [ "$f" == "twitter" ] || [ "$f" == "road" ] || [ "$f" == "web" ]; }; then
+                g="${f}U"
+            fi
             echo "run $g $k attempt $a"
             ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_1rd_${a}" "read";
             ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_2rd_${a}" "read";
             ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/w_hwpf_${a}";
         done
     done
-    rm -f $k
 done
 
 
@@ -60,22 +58,20 @@ sudo wrmsr -p 0 0x1a4 0x$new
 echo "msr 0x1a4 dis hwpf"
 sudo rdmsr -p 0 0x1a4
 
-for k in "${kernels[@]}"; do
-    echo "compile $k"
-    g++ -std=c++11 -pthread -O3 -Wall -w src/$k.cc -o $k
-    for f in "${files[@]}"; do
-        g="$f"
-        if [ "$k" == "tc" ] && { [ "$f" == "twitter" ] || [ "$f" == "road" ] || [ "$f" == "web" ]; }; then
-            g="${f}U"
-        fi
-        for a in $(seq 1 "$num_attempts"); do
+for a in $(seq 1 "$num_attempts"); do
+    for k in "${kernels[@]}"; do
+        echo "compile $k"
+        for f in "${files[@]}"; do
+            g="$f"
+            if [ "$k" == "tc" ] && { [ "$f" == "twitter" ] || [ "$f" == "road" ] || [ "$f" == "web" ]; }; then
+                g="${f}U"
+            fi
             echo "run $g $k attempt $a"
             ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_1rd_${a}" "read";
             ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_2rd_${a}" "read";
             ./test_gt.sh "$k" "$g" "$smt_core0" "$smt_core1" "${out_root}/wo_hwpf_${a}";
         done
     done
-    rm -f $k
 done
 
 sudo wrmsr -p 0 0x1a4 0x$orig
