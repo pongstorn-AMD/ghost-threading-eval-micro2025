@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+# run on c7i.metal-24xl which support serialize instruction, check with "lscpu | grep serialize"
+
 smt_core0=$1
 smt_core1=$2
 num_attempts=4
